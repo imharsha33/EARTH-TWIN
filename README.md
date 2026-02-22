@@ -1,73 +1,77 @@
-# Welcome to your Lovable project
+# 🌍 Earth Twin
 
-## Project info
+A 3D Earth simulation and data visualization platform built with React, Three.js, and TypeScript.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Tech Stack
 
-## How can I edit this code?
+- **React 18** with TypeScript
+- **Three.js / React Three Fiber** for 3D Earth rendering
+- **Vite** for development and bundling
+- **TailwindCSS** for styling
+- **Recharts** for data visualization
+- **Framer Motion** for animations
+- **React Router DOM** for navigation
+- **Radix UI / shadcn** component library
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- Node.js 18+
+- npm or bun
 
-Changes made via Lovable will be committed automatically to this repo.
+### Install Dependencies
 
-**Use your preferred IDE**
+```bash
+npm install
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Run Development Server
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build for Production
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Preview Production Build
 
-## What technologies are used for this project?
+```bash
+npm run preview
+```
 
-This project is built with:
+### Run Tests
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+npm test
+```
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```
+src/
+├── components/       # Reusable UI components
+│   ├── EarthGlobe.tsx
+│   ├── DataDashboard.tsx
+│   ├── SimControls.tsx
+│   └── ui/           # shadcn/radix base components
+├── pages/            # Application pages
+│   ├── LandingPage.tsx
+│   ├── SimulationPage.tsx
+│   ├── ReportPage.tsx
+│   └── Index.tsx
+├── lib/              # Utility and simulation logic
+│   ├── simulation.ts
+│   └── utils.ts
+└── hooks/            # Custom React hooks
+```
 
-## Can I connect a custom domain to my Lovable project?
+## License
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+MIT
