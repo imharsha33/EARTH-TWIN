@@ -24,57 +24,43 @@ function HeroEarthMesh() {
     });
 
     const atmosColor = useMemo(() => new THREE.Color(0x4fc3f7), []);
-    const R = 2.6;
+    const R = 1.3;
 
     return (
-        <group rotation={[0.12, -0.6, 0]}>
+        <group rotation={[0.08, -0.4, 0]}>
             {/* Earth surface */}
             <mesh ref={earthRef}>
                 <sphereGeometry args={[R, 128, 128]} />
                 <meshPhongMaterial
                     map={dayMap}
                     bumpMap={bumpMap}
-                    bumpScale={0.07}
+                    bumpScale={0.12}
                     specularMap={specularMap}
                     specular={new THREE.Color(0x334455)}
-                    shininess={45}
+                    shininess={55}
                 />
             </mesh>
 
-            {/* Atmosphere inner shell */}
+            {/* Subtle wireframe grid for geographic definition */}
+            <mesh>
+                <sphereGeometry args={[R * 1.001, 36, 18]} />
+                <meshBasicMaterial
+                    color={new THREE.Color(0x88ccff)}
+                    wireframe
+                    transparent
+                    opacity={0.04}
+                    depthWrite={false}
+                />
+            </mesh>
+
+            {/* Atmosphere glow — FrontSide only, blends softly into background */}
             <mesh ref={glowRef}>
-                <sphereGeometry args={[R * 1.018, 96, 96]} />
+                <sphereGeometry args={[R * 1.02, 96, 96]} />
                 <meshPhongMaterial
                     color={atmosColor}
                     transparent
-                    opacity={0.10}
+                    opacity={0.13}
                     side={THREE.FrontSide}
-                    blending={THREE.AdditiveBlending}
-                    depthWrite={false}
-                />
-            </mesh>
-
-            {/* Outer haze */}
-            <mesh>
-                <sphereGeometry args={[R * 1.12, 48, 48]} />
-                <meshBasicMaterial
-                    color={atmosColor}
-                    transparent
-                    opacity={0.04}
-                    side={THREE.BackSide}
-                    blending={THREE.AdditiveBlending}
-                    depthWrite={false}
-                />
-            </mesh>
-
-            {/* Limb rim */}
-            <mesh>
-                <sphereGeometry args={[R * 1.055, 48, 48]} />
-                <meshBasicMaterial
-                    color={atmosColor}
-                    transparent
-                    opacity={0.065}
-                    side={THREE.BackSide}
                     blending={THREE.AdditiveBlending}
                     depthWrite={false}
                 />
@@ -86,22 +72,22 @@ function HeroEarthMesh() {
 function HeroGlobe() {
     return (
         <Canvas
-            camera={{ position: [0, 0, 7.0], fov: 36 }}
+            camera={{ position: [0, 0, 6.0], fov: 40 }}
             gl={{ antialias: true, alpha: true }}
             style={{ width: '100%', height: '100%', background: 'transparent' }}
             onCreated={({ gl }) => {
                 gl.setClearColor(0x000000, 0);
             }}
         >
-            <ambientLight intensity={0.35} />
+            <ambientLight intensity={0.4} />
             {/* Main sun from upper-right, brighter for daylit face */}
-            <directionalLight position={[5, 2, 4]} intensity={2.6} color="#fff5e8" />
-            {/* Cool fill */}
-            <directionalLight position={[-3, -1, -3]} intensity={0.22} color="#4fc3f7" />
+            <directionalLight position={[5, 2, 4]} intensity={2.8} color="#fff5e8" />
+            {/* Cool fill for dark side */}
+            <directionalLight position={[-3, -1, -3]} intensity={0.25} color="#4fc3f7" />
             {/* Back rim */}
             <pointLight position={[0, 5, -6]} intensity={0.35} color="#7e57c2" />
 
-            {/* Dense layered stars to fill space around globe */}
+            {/* Layered stars */}
             <Stars radius={12} depth={18} count={1500} factor={2} fade speed={0.2} saturation={0.3} />
             <Stars radius={50} depth={40} count={3000} factor={3.5} fade speed={0.2} saturation={0.1} />
             <Stars radius={120} depth={80} count={2000} factor={4} fade speed={0.3} />
@@ -113,7 +99,7 @@ function HeroGlobe() {
                 enableZoom={false}
                 enablePan={false}
                 autoRotate
-                autoRotateSpeed={0.5}
+                autoRotateSpeed={0.4}
                 minPolarAngle={Math.PI / 4}
                 maxPolarAngle={Math.PI / 1.5}
             />
@@ -209,17 +195,18 @@ export default function LandingPage() {
                     </motion.div>
                 </div>
 
-                {/* Right: full-height rotating Earth — overflows so no dark ring */}
+                {/* Right: full-height rotating Earth — floats freely in space */}
                 <motion.div
-                    className="flex-1 relative overflow-visible"
-                    style={{ marginRight: '-8%' }}
+                    className="flex-1 relative overflow-visible flex items-center justify-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.2, delay: 0.1 }}
                 >
                     {/* Subtle radial glow behind the globe */}
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(210_100%_62%/0.08)_0%,transparent_65%)] pointer-events-none z-0" />
-                    <HeroGlobe />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(210_100%_62%/0.10)_0%,transparent_65%)] pointer-events-none z-0" />
+                    <div className="absolute inset-0">
+                        <HeroGlobe />
+                    </div>
                 </motion.div>
             </div>
         </div>
