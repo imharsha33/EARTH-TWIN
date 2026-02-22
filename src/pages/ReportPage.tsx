@@ -89,12 +89,12 @@ export default function ReportPage() {
 
     return (
         <div className="min-h-screen bg-background">
-            <header className="border-b border-border/50 px-6 py-4 flex items-center gap-4 bg-card/40 backdrop-blur-md">
-                <Button variant="ghost" size="icon" onClick={() => navigate('/simulation')}>
+            <header className="border-b border-border/50 px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3 bg-card/40 backdrop-blur-md">
+                <Button variant="ghost" size="icon" onClick={() => navigate('/simulation')} className="shrink-0">
                     <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                    <h1 className="font-display text-sm font-semibold text-foreground tracking-wide">
+                    <h1 className="font-display text-xs sm:text-sm font-semibold text-foreground tracking-wide">
                         Scenario Report · 1,000,000 Year Analysis
                     </h1>
                     <p className="text-[10px] text-muted-foreground font-medium">
@@ -103,17 +103,17 @@ export default function ReportPage() {
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto p-6 space-y-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
                 {/* Summary */}
                 <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <h2 className="font-display text-xl font-bold text-foreground mb-4">Million-Year Summary</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                    <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">Million-Year Summary</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-2 sm:mb-3">
                         <SummaryCard label="Peak Temp" value={`+${finalData.temperature}°C`} color="hsl(0, 84%, 60%)" />
                         <SummaryCard label="Final GDP" value={`$${finalData.gdp}T`} color="hsl(38, 92%, 50%)" />
                         <SummaryCard label="Population" value={`${finalData.population}B`} color="hsl(142, 71%, 45%)" />
                         <SummaryCard label="Health Score" value={`${finalData.earthHealthScore}/100`} color={getHealthColor(finalData.earthHealthScore)} />
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                         <SummaryCard label="Ice Coverage" value={`${finalData.iceCoveragePercent}%`} color="#81d4fa" />
                         <SummaryCard label="CO₂" value={`${finalData.atmosphericCO2ppm} ppm`} color="hsl(38, 80%, 55%)" />
                         <SummaryCard label="Biodiversity" value={`${finalData.biodiversity}%`} color="hsl(142, 65%, 45%)" />
@@ -123,15 +123,15 @@ export default function ReportPage() {
 
                 {/* Deep-Time Headlines */}
                 <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                    <h2 className="font-display text-xl font-bold text-foreground mb-4">Future Headlines</h2>
-                    <div className="space-y-3">
+                    <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">Future Headlines</h2>
+                    <div className="space-y-2 sm:space-y-3">
                         {headlines.map(({ year, headline, tone }) => (
-                            <div key={year} className="rounded-lg border border-border bg-card p-4 flex gap-4 items-start">
-                                <span className="font-display text-sm font-bold text-primary shrink-0 min-w-[90px]">
+                            <div key={year} className="rounded-lg border border-border bg-card p-3 sm:p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 items-start">
+                                <span className="font-display text-xs sm:text-sm font-bold text-primary shrink-0">
                                     {formatYearFull(year)}
                                 </span>
                                 <div className="flex-1">
-                                    <p className="text-sm text-foreground">{headline}</p>
+                                    <p className="text-xs sm:text-sm text-foreground">{headline}</p>
                                     <span className={`text-[10px] uppercase tracking-wider ${tone === 'positive' ? 'text-green-400' : tone === 'negative' ? 'text-red-400' : 'text-amber-400'
                                         }`}>
                                         {tone === 'positive' && <TrendingUp className="h-3 w-3 inline mr-1" />}
@@ -153,8 +153,8 @@ export default function ReportPage() {
                                 const Icon = ICON_MAP[tp.icon] ?? AlertTriangle;
                                 return (
                                     <div key={i} className={`rounded-lg border p-4 flex items-center gap-3 ${tp.severity === 'danger'
-                                            ? 'border-red-500/30 bg-red-950/20'
-                                            : 'border-amber-500/30 bg-amber-950/20'
+                                        ? 'border-red-500/30 bg-red-950/20'
+                                        : 'border-amber-500/30 bg-amber-950/20'
                                         }`}>
                                         <Icon className={`h-4 w-4 shrink-0 ${tp.severity === 'danger' ? 'text-red-400' : 'text-amber-400'}`} />
                                         <div>

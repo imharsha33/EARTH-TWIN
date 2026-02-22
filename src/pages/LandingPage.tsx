@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, Suspense } from 'react';
 import { ArrowRight, Thermometer, Wind, Users, TreePine, Zap, Globe2 } from 'lucide-react';
 
 /* ─── Dedicated full-screen Earth for the hero ─────────────────────────────── */
@@ -80,21 +80,18 @@ function HeroGlobe() {
             }}
         >
             <ambientLight intensity={0.4} />
-            {/* Main sun from upper-right, brighter for daylit face */}
             <directionalLight position={[5, 2, 4]} intensity={2.8} color="#fff5e8" />
-            {/* Cool fill for dark side */}
             <directionalLight position={[-3, -1, -3]} intensity={0.25} color="#4fc3f7" />
-            {/* Back rim */}
             <pointLight position={[0, 5, -6]} intensity={0.35} color="#7e57c2" />
 
-            {/* Layered stars */}
             <Stars radius={12} depth={18} count={1500} factor={2} fade speed={0.2} saturation={0.3} />
             <Stars radius={50} depth={40} count={3000} factor={3.5} fade speed={0.2} saturation={0.1} />
             <Stars radius={120} depth={80} count={2000} factor={4} fade speed={0.3} />
 
-            <HeroEarthMesh />
+            <Suspense fallback={null}>
+                <HeroEarthMesh />
+            </Suspense>
 
-            {/* Auto-rotate + user can drag */}
             <OrbitControls
                 enableZoom={false}
                 enablePan={false}
@@ -107,7 +104,7 @@ function HeroGlobe() {
     );
 }
 
-/* ─── Stats strip ────────────────────────────────────────────────────────────── */
+/* ─── Stats strip ─────────────────────────────────────────────────────────── */
 const STATS = [
     { icon: Thermometer, label: 'Warming', value: '+1.2°C', color: 'text-red-400' },
     { icon: Wind, label: 'CO₂', value: '421 ppm', color: 'text-amber-400' },
@@ -117,14 +114,14 @@ const STATS = [
     { icon: Globe2, label: 'Ice Age Cycles', value: '10+', color: 'text-cyan-400' },
 ];
 
-/* ─── Page ───────────────────────────────────────────────────────────────────── */
+/* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function LandingPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="h-screen w-screen bg-background overflow-hidden flex flex-col">
+        <div className="min-h-screen w-screen bg-background flex flex-col overflow-x-hidden">
             {/* ── Nav ── */}
-            <nav className="relative z-20 flex items-center justify-between px-8 py-4 shrink-0">
+            <nav className="relative z-20 flex items-center justify-between px-5 sm:px-8 py-4 shrink-0 border-b border-border/20">
                 <div className="flex items-center gap-2.5">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                     <span className="font-display text-sm font-semibold tracking-wide text-foreground">
@@ -141,25 +138,38 @@ export default function LandingPage() {
                 </Button>
             </nav>
 
-            {/* ── Hero split ── */}
-            <div className="flex flex-1 overflow-hidden">
+            {/* ── Hero — stacked on mobile, split on desktop ── */}
+            <div className="flex flex-col lg:flex-row flex-1 min-h-0">
 
-                {/* Left: text content */}
-                <div className="w-[46%] flex flex-col justify-center px-10 xl:px-16 shrink-0 z-10">
+                {/* Globe — top on mobile, right on desktop */}
+                <motion.div
+                    className="order-1 lg:order-2 lg:flex-1 w-full h-[45vw] min-h-[260px] max-h-[420px] lg:max-h-none lg:h-auto relative overflow-visible flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.2, delay: 0.1 }}
+                >
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(210_100%_62%/0.10)_0%,transparent_65%)] pointer-events-none z-0" />
+                    <div className="absolute inset-0">
+                        <HeroGlobe />
+                    </div>
+                </motion.div>
+
+                {/* Text content — below globe on mobile, left on desktop */}
+                <div className="order-2 lg:order-1 lg:w-[46%] flex flex-col justify-center px-5 sm:px-10 xl:px-16 py-8 lg:py-0 shrink-0 z-10">
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: 0, y: 20 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
                         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     >
-                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-4 font-semibold">
+                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-semibold">
                             AI-Powered Planetary Simulation · 1,000,000 Year Span
                         </p>
-                        <h1 className="font-display text-4xl xl:text-5xl font-bold text-foreground leading-[1.1] mb-5">
+                        <h1 className="font-display text-3xl sm:text-4xl xl:text-5xl font-bold text-foreground leading-[1.1] mb-4">
                             What happens to{' '}
                             <span className="text-primary">Earth</span> over the next{' '}
                             <span className="text-primary">million years?</span>
                         </h1>
-                        <p className="text-muted-foreground text-base leading-relaxed mb-8 max-w-sm">
+                        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-6 max-w-sm">
                             Adjust climate, economy, and policy — then watch ice ages cycle,
                             civilisations rise and fall, and Earth transform across deep time.
                         </p>
@@ -178,15 +188,15 @@ export default function LandingPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.45 }}
-                        className="grid grid-cols-3 gap-2 mt-10"
+                        className="grid grid-cols-3 gap-2 mt-8"
                     >
                         {STATS.map(({ icon: Icon, label, value, color }) => (
                             <div
                                 key={label}
-                                className="rounded-xl border border-border/40 bg-card/50 backdrop-blur-sm p-3 text-center hover:border-border/70 hover:bg-card/70 transition-all duration-300"
+                                className="rounded-xl border border-border/40 bg-card/50 backdrop-blur-sm p-2.5 sm:p-3 text-center hover:border-border/70 hover:bg-card/70 transition-all duration-300"
                             >
                                 <Icon className={`h-3.5 w-3.5 mx-auto mb-1.5 ${color} opacity-80`} />
-                                <p className={`font-display text-base font-semibold ${color}`}>{value}</p>
+                                <p className={`font-display text-sm sm:text-base font-semibold ${color}`}>{value}</p>
                                 <p className="text-[9px] text-muted-foreground mt-0.5 uppercase tracking-wider leading-tight">
                                     {label}
                                 </p>
@@ -194,20 +204,6 @@ export default function LandingPage() {
                         ))}
                     </motion.div>
                 </div>
-
-                {/* Right: full-height rotating Earth — floats freely in space */}
-                <motion.div
-                    className="flex-1 relative overflow-visible flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.2, delay: 0.1 }}
-                >
-                    {/* Subtle radial glow behind the globe */}
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(210_100%_62%/0.10)_0%,transparent_65%)] pointer-events-none z-0" />
-                    <div className="absolute inset-0">
-                        <HeroGlobe />
-                    </div>
-                </motion.div>
             </div>
         </div>
     );
